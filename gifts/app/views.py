@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views import View
+from app.models import Donation, Institution
 
 # Create your views here.
 
@@ -7,7 +8,13 @@ from django.views import View
 class LandingPage(View):
 
     def get(self, request):
-        return render(request, "index.html")
+        context = {}
+        context['bags_quantity'] = sum([x.quantity for x in Donation.objects.all()])   
+        context['institution_quantity'] = len(Institution.objects.all())   
+        context['fundacje'] = Institution.objects.filter(i_type=1)
+        context['pozarządowe'] = Institution.objects.filter(i_type=2)
+        context['zbiórki'] = Institution.objects.filter(i_type=3)
+        return render(request, "index.html", context)
 
 
 class AddDonation(View):
