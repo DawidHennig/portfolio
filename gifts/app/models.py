@@ -1,7 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
+from django.conf import settings
 
 # Create your models here.
+class EmailUser(AbstractUser):
+    email = models.EmailField(unique=True)
 
 
 class Category(models.Model):

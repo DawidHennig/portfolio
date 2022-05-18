@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views import View
-from app.models import Donation, Institution
+from app.models import Donation, Institution, EmailUser
 from django.shortcuts import redirect
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -42,4 +43,6 @@ class Register(View):
         password = request.POST['password'] 
         password2 = request.POST['password2'] 
         print(name, surname, email, password, password2)
+        EmailUser.objects.create_user(username=name+"_"+surname, first_name=name, last_name=surname, email=email, password=password)
+
         return redirect('login') 
