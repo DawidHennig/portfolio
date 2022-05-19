@@ -84,6 +84,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
+AUTH_USER_MODEL = 'app.EmailUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -124,4 +125,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_USER_MODEL = 'app.EmailUser'
