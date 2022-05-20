@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from app.models import Donation, Institution, EmailUser
+from app.models import Donation, Institution
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.db.models import Sum
