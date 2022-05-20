@@ -4,6 +4,7 @@ from app.models import Donation, Institution
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from app.forms import RegisterForm
 
 # Create your views here.
 
@@ -35,15 +36,17 @@ class Login(View):
 class Register(View):
 
     def get(self, request):
-        return render(request, "register.html")
+        form = RegisterForm()
+        return render(request, "register.html", {"form": form})
 
     def post(self, request):
-        name = request.POST['name'] 
-        surname = request.POST['surname'] 
-        email = request.POST['email'] 
-        password = request.POST['password'] 
-        password2 = request.POST['password2'] 
-        print(name, surname, email, password, password2)
-        EmailUser.objects.create_user(first_name=name, last_name=surname, email=email, password=password)
-
-        return redirect('login') 
+        form = RegisterForm(request.POST) 
+        if form.is_valid():
+            name = form.cleaned_data['name'] 
+            surname = form.cleaned_data['surname'] 
+            email = form.cleaned_data['email'] 
+            password = form.cleaned_data['password'] 
+            password2 = form.cleaned_data['password2'] 
+            print(name, surname, email, password, password2)
+            return redirect("login") 
+        return redirect("register") 
