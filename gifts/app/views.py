@@ -1,10 +1,11 @@
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.views import View
-from app.models import Donation, Institution
+from app.models import Donation, Institution, User
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
 from django.db.models import Sum
-from app.forms import RegisterForm
+from app.forms import RegisterForm, LoginForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -21,7 +22,8 @@ class LandingPage(View):
         return render(request, "index.html", context)
 
 
-class AddDonation(View):
+class AddDonation(LoginRequiredMixin, View):
+    login_url = '/login/'
 
     def get(self, request):
         return render(request, "form.html")
@@ -30,7 +32,25 @@ class AddDonation(View):
 class Login(View):
 
     def get(self, request):
-        return render(request, "login.html")
+        form = LoginForm()
+        return render(request, "login.html", {"form": form})
+
+    def post(self, request):
+        form = LoginForm(request.POST) 
+        if form.is_valid():
+            email = form.cleaned_data['email'] 
+            password = form.cleaned_data['password'] 
+            user = authenticate(request, email=email, password=password)
+            if user:
+                login(request, user)
+                return redirect("index") 
+        return redirect("register") 
+
+
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return redirect('index')
 
 
 class Register(View):
@@ -47,6 +67,6 @@ class Register(View):
             email = form.cleaned_data['email'] 
             password = form.cleaned_data['password'] 
             password2 = form.cleaned_data['password2'] 
-            print(name, surname, email, password, password2)
+            User.objects.create_user(email=email, password=password, first_name=name, last_name=surname)
             return redirect("login") 
         return redirect("register") 
