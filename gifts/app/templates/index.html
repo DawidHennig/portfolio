@@ -56,7 +56,9 @@
         </div>
       </div>
 
+      {% if not user.is_authenticated %}
       <a href="{% url 'register' %}" class="btn btn--large">Załóż konto</a>
+      {% endif %}
     </section>
 
     <section id="about-us" class="about-us">
