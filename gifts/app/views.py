@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.views import View
-from app.models import Donation, Institution, User
+from app.models import Donation, Institution, User, Category
 from django.shortcuts import redirect
 from django.db.models import Sum
 from app.forms import RegisterForm, LoginForm
@@ -26,7 +26,10 @@ class AddDonation(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request):
-        return render(request, "form.html")
+        context = {}
+        context['categories'] = Category.objects.all()
+        context['institutions'] = Institution.objects.all()
+        return render(request, "form.html", context)
 
 
 class Login(View):
